@@ -1,0 +1,152 @@
+[
+  {
+    "object_id": 303387,
+    "object_number": "1931.162.A",
+    "title": "Lion",
+    "artists": [],
+    "date_text": "1500-1350 BCE",
+    "date_begin": -1500,
+    "date_end": -1350,
+    "classification": "Sculpture",
+    "medium": "Glazed terracotta",
+    "url": "https://harvardartmuseums.org/collections/object/303387",
+    "scraped_at": "2026-07-30T12:26:55.521300Z",
+    "source": "http"
+  },
+  {
+    "object_id": 288638,
+    "object_number": "1975.41.9",
+    "title": "Roundel: Putto on a Horse",
+    "artists": [],
+    "date_text": "5th-7th century",
+    "date_begin": 400,
+    "date_end": 699,
+    "classification": "Textile Arts",
+    "medium": "Wool and linen, tapestry weave",
+    "url": "https://harvardartmuseums.org/collections/object/288638",
+    "scraped_at": "2026-07-30T12:26:55.522337Z",
+    "source": "http"
+  },
+  {
+    "object_id": 336788,
+    "object_number": "2010.538.9",
+    "title": "Scurrying Home",
+    "artists": [
+      "Alfred Stieglitz"
+    ],
+    "date_text": "1897",
+    "date_begin": 1897,
+    "date_end": 1897,
+    "classification": "Photographs",
+    "medium": null,
+    "url": "https://harvardartmuseums.org/collections/object/336788",
+    "scraped_at": "2026-07-30T12:26:55.522337Z",
+    "source": "http"
+  },
+  {
+    "object_id": 332061,
+    "object_number": "2009.73",
+    "title": "Judge Webster Thayer",
+    "artists": [
+      "Ben Shahn"
+    ],
+    "date_text": "1931-1932",
+    "date_begin": 1931,
+    "date_end": 1932,
+    "classification": "Drawings",
+    "medium": "Gouache on beige laid paper, mounted on masonite",
+    "url": "https://harvardartmuseums.org/collections/object/332061",
+    "scraped_at": "2026-07-30T12:26:55.522337Z",
+    "source": "http"
+  },
+  {
+    "object_id": 303829,
+    "object_number": "1972.74",
+    "title": "A Nayika and Her Lover: Page from a Dispersed Rasamanjari Series (Blossom Cluster of Delight)",
+    "artists": [],
+    "date_text": "c. 1660-1670",
+    "date_begin": 1600,
+    "date_end": 1680,
+    "classification": "Manuscripts",
+    "medium": "Opaque watercolor, gold, and beetle-wing cases on paper",
+    "url": "https://harvardartmuseums.org/collections/object/303829",
+    "scraped_at": "2026-07-30T12:26:55.522337Z",
+    "source": "http"
+  },
+  {
+    "object_id": 383838,
+    "object_number": "2024.73",
+    "title": "Shield",
+    "artists": [
+      "Joiri Minaya"
+    ],
+    "date_text": "2022",
+    "date_begin": 2022,
+    "date_end": 2022,
+    "classification": "Photographs",
+    "medium": "Inkjet print mounted to Dibond",
+    "url": "https://harvardartmuseums.org/collections/object/383838",
+    "scraped_at": "2026-07-30T12:26:55.522337Z",
+    "source": "http"
+  },
+  {
+    "object_id": 284826,
+    "object_number": "P1984.23",
+    "title": "Untitled (cyclamen, outdoors)",
+    "artists": [
+      "Sarah Choate Sears"
+    ],
+    "date_text": "c. 1892-c. 1905",
+    "date_begin": 1892,
+    "date_end": 1905,
+    "classification": "Photographs",
+    "medium": null,
+    "url": "https://harvardartmuseums.org/collections/object/284826",
+    "scraped_at": "2026-07-30T12:26:55.522337Z",
+    "source": "http"
+  },
+  {
+    "object_id": 262439,
+    "object_number": "M13615",
+    "title": "The Smoking Fire",
+    "artists": [
+      "Giovanni Battista Piranesi"
+    ],
+    "date_text": "1749-1750",
+    "date_begin": 1749,
+    "date_end": 1750,
+    "classification": "Prints",
+    "medium": "Etching on heavy cream antique laid paper",
+    "url": "https://harvardartmuseums.org/collections/object/262439",
+    "scraped_at": "2026-07-30T12:26:55.522337Z",
+    "source": "http"
+  },
+  {
+    "object_id": 312569,
+    "object_number": "2007.140",
+    "title": "Yalis and Makaras within Ogival Lattice",
+    "artists": [],
+    "date_text": "15th century",
+    "date_begin": 1400,
+    "date_end": 1499,
+    "classification": "Textile Arts",
+    "medium": "Silk, lampas weave",
+    "url": "https://harvardartmuseums.org/collections/object/312569",
+    "scraped_at": "2026-07-30T12:26:55.522337Z",
+    "source": "http"
+  },
+  {
+    "object_id": 311074,
+    "object_number": "1968.109",
+    "title": "Lamp in the Shape of a Trussed Male Gazelle",
+    "artists": [],
+    "date_text": "2nd-4th century CE",
+    "date_begin": 100,
+    "date_end": 400,
+    "classification": "Lighting Devices",
+    "medium": "Leaded bronze",
+    "url": "https://harvardartmuseums.org/collections/object/311074",
+    "scraped_at": "2026-07-30T12:26:55.522337Z",
+    "source": "http"
+  }
+]
