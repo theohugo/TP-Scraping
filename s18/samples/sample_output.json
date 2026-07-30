@@ -1,0 +1,126 @@
+{
+  "products": [
+    {
+      "sku": "GK-001",
+      "name": "Brocolli",
+      "unit": "kg",
+      "quantity_step": 1,
+      "price": "120",
+      "currency": "INR",
+      "category": "vegetables",
+      "image_url": "https://rahulshettyacademy.com/seleniumPractise/images/broccoli.jpg",
+      "url": "https://rahulshettyacademy.com/seleniumPractise/#/",
+      "scraped_at": "2026-07-30T12:25:53.378055Z",
+      "source": "api"
+    },
+    {
+      "sku": "GK-002",
+      "name": "Cauliflower",
+      "unit": "kg",
+      "quantity_step": 1,
+      "price": "60",
+      "currency": "INR",
+      "category": "vegetables",
+      "image_url": "https://rahulshettyacademy.com/seleniumPractise/images/cauliflower.jpg",
+      "url": "https://rahulshettyacademy.com/seleniumPractise/#/",
+      "scraped_at": "2026-07-30T12:25:53.378181Z",
+      "source": "api"
+    },
+    {
+      "sku": "GK-003",
+      "name": "Cucumber",
+      "unit": "kg",
+      "quantity_step": 1,
+      "price": "48",
+      "currency": "INR",
+      "category": "vegetables",
+      "image_url": "https://rahulshettyacademy.com/seleniumPractise/images/cucumber.jpg",
+      "url": "https://rahulshettyacademy.com/seleniumPractise/#/",
+      "scraped_at": "2026-07-30T12:25:53.378202Z",
+      "source": "api"
+    },
+    {
+      "sku": "GK-004",
+      "name": "Beetroot",
+      "unit": "kg",
+      "quantity_step": 1,
+      "price": "32",
+      "currency": "INR",
+      "category": "vegetables",
+      "image_url": "https://rahulshettyacademy.com/seleniumPractise/images/beetroot.jpg",
+      "url": "https://rahulshettyacademy.com/seleniumPractise/#/",
+      "scraped_at": "2026-07-30T12:25:53.378227Z",
+      "source": "api"
+    },
+    {
+      "sku": "GK-005",
+      "name": "Carrot",
+      "unit": "kg",
+      "quantity_step": 1,
+      "price": "56",
+      "currency": "INR",
+      "category": "vegetables",
+      "image_url": "https://rahulshettyacademy.com/seleniumPractise/images/carrots.jpg",
+      "url": "https://rahulshettyacademy.com/seleniumPractise/#/",
+      "scraped_at": "2026-07-30T12:25:53.378240Z",
+      "source": "api"
+    }
+  ],
+  "offers": [
+    {
+      "deal_id": "wheat",
+      "name": "Wheat",
+      "price": "67",
+      "discount_price": "28",
+      "currency": "INR",
+      "page": 1,
+      "url": "https://rahulshettyacademy.com/seleniumPractise/#/offers",
+      "scraped_at": "2026-07-30T12:25:57.555968Z",
+      "source": "browser"
+    },
+    {
+      "deal_id": "tomato",
+      "name": "Tomato",
+      "price": "37",
+      "discount_price": "26",
+      "currency": "INR",
+      "page": 1,
+      "url": "https://rahulshettyacademy.com/seleniumPractise/#/offers",
+      "scraped_at": "2026-07-30T12:25:57.556026Z",
+      "source": "browser"
+    },
+    {
+      "deal_id": "strawberry",
+      "name": "Strawberry",
+      "price": "23",
+      "discount_price": "15",
+      "currency": "INR",
+      "page": 1,
+      "url": "https://rahulshettyacademy.com/seleniumPractise/#/offers",
+      "scraped_at": "2026-07-30T12:25:57.556037Z",
+      "source": "browser"
+    },
+    {
+      "deal_id": "rice",
+      "name": "Rice",
+      "price": "37",
+      "discount_price": "46",
+      "currency": "INR",
+      "page": 1,
+      "url": "https://rahulshettyacademy.com/seleniumPractise/#/offers",
+      "scraped_at": "2026-07-30T12:25:57.556051Z",
+      "source": "browser"
+    },
+    {
+      "deal_id": "potato",
+      "name": "Potato",
+      "price": "34",
+      "discount_price": "22",
+      "currency": "INR",
+      "page": 1,
+      "url": "https://rahulshettyacademy.com/seleniumPractise/#/offers",
+      "scraped_at": "2026-07-30T12:25:57.556060Z",
+      "source": "browser"
+    }
+  ]
+}

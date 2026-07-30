@@ -1,0 +1,21 @@
+[
+  {"name": "Wheat", "price": "67", "discount_price": "28", "page": 1},
+  {"name": "Tomato", "price": "37", "discount_price": "26", "page": 1},
+  {"name": "Strawberry", "price": "23", "discount_price": "15", "page": 1},
+  {"name": "Rice", "price": "37", "discount_price": "46", "page": 1},
+  {"name": "Potato", "price": "34", "discount_price": "22", "page": 1},
+  {"name": "Pineapple", "price": "44", "discount_price": "34", "page": 2},
+  {"name": "Orange", "price": "88", "discount_price": "23", "page": 2},
+  {"name": "Mango", "price": "93", "discount_price": "53", "page": 2},
+  {"name": "Guava", "price": "42", "discount_price": "20", "page": 2},
+  {"name": "Dragon fruit", "price": "58", "discount_price": "40", "page": 2},
+  {"name": "Chocolate", "price": "56", "discount_price": "27", "page": 3},
+  {"name": "Cherry", "price": "93", "discount_price": "88", "page": 3},
+  {"name": "Cheese", "price": "34", "discount_price": "12", "page": 3},
+  {"name": "Carrot", "price": "34", "discount_price": "12", "page": 3},
+  {"name": "Brinjal", "price": "37", "discount_price": "44", "page": 3},
+  {"name": "Beans", "price": "38", "discount_price": "36", "page": 4},
+  {"name": "Banana", "price": "87", "discount_price": "77", "page": 4},
+  {"name": "Apple", "price": "67", "discount_price": "41", "page": 4},
+  {"name": "Almond", "price": "64", "discount_price": "60", "page": 4}
+]
