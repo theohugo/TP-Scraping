@@ -1,4 +1,4 @@
-# GreenKart scraper — TP individuel (cible S18)
+# GreenKart scraper (cible S18)
 
 TP individuel de la formation *Web Scraping moderne et industrialisation*.
 Cible attribuee : **S18 — GreenKart** (Rahul Shetty Academy),
