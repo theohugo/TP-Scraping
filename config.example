@@ -1,0 +1,24 @@
+# Copiez ce fichier en ".env" et adaptez si besoin. Aucune valeur ici n'est un secret :
+# l'endpoint utilise est public et ne demande aucune authentification.
+
+# URL de base du site cible
+HARVEST_BASE_URL=https://harvardartmuseums.org
+
+# Nombre d'objets demandes par requete (pagination offset/load_amount)
+HARVEST_LOAD_AMOUNT=20
+
+# Plafond d'objets a collecter au total (voir MATRICE_CIBLES_ELEVES.md : 60 max pour S30)
+HARVEST_MAX_ITEMS=60
+
+# Delai minimum entre deux requetes, en secondes (politesse, meme si robots.txt
+# ne declare pas de Crawl-delay pour un client identifie distinctement)
+HARVEST_DELAY_S=1.5
+
+# Nombre de tentatives supplementaires sur erreur temporaire (429, 5xx)
+HARVEST_MAX_RETRIES=3
+
+# Dossier de sortie des fichiers collectes
+HARVEST_OUTPUT_DIR=data
+
+# User-Agent envoye : identifie honnetement le projet, avec un contact
+HARVEST_USER_AGENT=HarvardCollectionsHarvester/0.1 (+https://github.com/theohugo/TP-Scraping; TP scraping IPSSI, usage academique)
