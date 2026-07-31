@@ -1,12 +1,22 @@
-"""Export des Artwork collectes et deduplication par identifiant stable."""
+"""Export des Artwork collectes et deduplication par identifiant stable.
+
+La deduplication generique et l'export JSONL/echantillon sont strictement
+identiques a ceux du collecteur S18 du binome (aucune dependance a un champ
+propre a `Artwork`) : ils vivent desormais dans le package partage `commun`
+(`commun.storage`). Ce module se contente d'adapter `dedupe` a la cle
+`object_id` et de reexporter le reste, pour que `collect.py` et
+`verif/verif.py` n'aient besoin d'aucune modification.
+"""
 
 from __future__ import annotations
 
-import json
 from dataclasses import dataclass, field
-from pathlib import Path
+
+from commun.storage import dedupe, write_json_sample, write_jsonl
 
 from .models import Artwork
+
+__all__ = ["CollectionReport", "dedupe_artworks", "write_jsonl", "write_json_sample"]
 
 
 @dataclass(slots=True)
@@ -32,29 +42,4 @@ class CollectionReport:
 
 def dedupe_artworks(artworks: list[Artwork]) -> tuple[list[Artwork], int]:
     """Deduplique par object_id (identifiant stable), garde la premiere occurrence."""
-    seen_ids: set[int] = set()
-    unique: list[Artwork] = []
-    duplicates = 0
-    for artwork in artworks:
-        if artwork.object_id in seen_ids:
-            duplicates += 1
-            continue
-        seen_ids.add(artwork.object_id)
-        unique.append(artwork)
-    return unique, duplicates
-
-
-def write_jsonl(artworks: list[Artwork], path: Path) -> int:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as handle:
-        for artwork in artworks:
-            handle.write(artwork.model_dump_json() + "\n")
-    return len(artworks)
-
-
-def write_json_sample(artworks: list[Artwork], path: Path, *, limit: int = 10) -> int:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    sample = artworks[:limit]
-    payload = [json.loads(artwork.model_dump_json()) for artwork in sample]
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-    return len(sample)
+    return dedupe(artworks, key=lambda artwork: artwork.object_id)

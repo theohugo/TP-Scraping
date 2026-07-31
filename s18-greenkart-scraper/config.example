@@ -1,0 +1,12 @@
+# Copier en .env (ne jamais versionner .env : aucun secret ici de toute facon,
+# la cible est publique et anonyme, mais on garde le reflexe).
+
+# Debit et politesse
+GK_REQUEST_DELAY_S=0.5
+GK_MAX_RETRIES=3
+
+# Plafonds de volume (protection, pas objectif)
+GK_MAX_OFFERS_PAGES=10
+
+# Sortie
+GK_OUTPUT_DIR=data

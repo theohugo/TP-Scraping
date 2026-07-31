@@ -1,18 +1,28 @@
-# TP Scraping — Hugo Raguin (S30 : Harvard Art Museums Collections)
+# Harvard Art Museums scraper — cible S30
 
-TP individuel "Web Scraping moderne et industrialisation" (IPSSI, formateur Adrien Vossough).
-Cible attribuee : **S30, Harvard Art Museums Collections**.
+Travail de groupe (binome) de la formation "Web Scraping moderne et industrialisation"
+(IPSSI, formateur Adrien Vossough) : **RAGUIN Hugo** (cible S30, ce dossier) et
+**TALEB Amine** (cible S18,
+[`../s18-greenkart-scraper`](../s18-greenkart-scraper)). Le detail du binome et des
+fonctions partagees entre les deux collecteurs est dans [`../README.md`](../README.md) et
+[`../commun/README.md`](../commun/README.md).
 
-Ce depot contient aussi les supports fournis par le formateur (`eleves/`,
-`MATRICE_CIBLES_ELEVES.html`) ; le projet de collecte lui-meme (`src/`, `verif/`, `docs/`) est
-decrit ci-dessous.
+Cible attribuee a Hugo : **S30, Harvard Art Museums Collections**.
+
+Les supports fournis par le formateur (`eleves/`, `MATRICE_CIBLES_ELEVES.html`) sont a la
+racine du depot (`../eleves`, `../MATRICE_CIBLES_ELEVES.html`) ; le projet de collecte
+lui-meme (`src/`, `verif/`, `docs/`) est decrit ci-dessous.
 
 ## Demarrage rapide
+
+Toutes les commandes ci-dessous sont a executer depuis **ce dossier**
+(`s30-harvard-art-museums-scraper/`).
 
 ```bash
 # 1. Environnement
 python -m venv .venv
 .venv/Scripts/activate          # Windows ; sous Linux/Mac : source .venv/bin/activate
+pip install -e ../commun        # package partage avec le collecteur S18 du binome
 pip install -r requirements.txt
 
 # 2. Collecte limitee (reseau requis)
@@ -66,6 +76,12 @@ storage.py          Deduplique par object_id (identifiant stable du musee), puis
 `collect.py` orchestre les quatre etapes dans une boucle bornee (`while vus < max_items`) et
 affiche un rapport final (vus / exportes / rejetes / doublons / champs manquants).
 
+Depuis la fusion avec le collecteur S18 du binome, `acquisition.py` et `storage.py`
+delegent la boucle de retry HTTP et la deduplication/export JSONL generiques au package
+partage [`../commun`](../commun) (strictement identiques entre les deux projets) ; le reste
+de ce flux (modele `Artwork`, normalisations, pagination `/browse`) reste propre a ce
+projet. Voir [`../commun/README.md`](../commun/README.md) pour le detail.
+
 ## Choix techniques, et pourquoi
 
 | Besoin | Choix retenu | Pourquoi | Alternative ecartee |
@@ -90,7 +106,8 @@ verif/               Script de verification + page de resultats enregistree (san
 samples/             Echantillon de sortie (10 objets), verse dans le depot
 docs/                Fiche de cible avec preuves, architecture detaillee, usage de l'IA
 data/                Sortie complete d'une collecte reelle (non versionne, genere localement)
-eleves/, MATRICE_CIBLES_ELEVES.html    Supports fournis par le formateur
+../commun/           Package partage avec le collecteur S18 (retry HTTP, storage, .env)
+../eleves/, ../MATRICE_CIBLES_ELEVES.html    Supports fournis par le formateur (racine du depot)
 ```
 
 ## Format de sortie

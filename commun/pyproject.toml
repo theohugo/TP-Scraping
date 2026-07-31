@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "commun"
+version = "0.1.0"
+description = "Fonctions partagees entre les collecteurs S18 (GreenKart) et S30 (Harvard Art Museums)"
+requires-python = ">=3.11"
+dependencies = [
+    "httpx==0.28.1",
+    "pydantic==2.13.4",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

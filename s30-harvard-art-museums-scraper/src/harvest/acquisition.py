@@ -10,20 +10,26 @@ expose une cle de l'API publique interne du musee (api.harvardartmuseums.org).
 Cette cle appartient au musee, pas a nous : nous ne l'utilisons jamais, meme si
 elle est techniquement lisible. Nous rejouons uniquement l'appel /browse tel
 que la page elle-meme l'utilise, sans jamais toucher a cette cle.
+
+La boucle de retry (statuts transitoires, backoff, Retry-After) vit desormais
+dans le package partage `commun` (`commun.http_client`, utilise aussi par le
+collecteur S18 du binome) : ce module se contente d'appeler ce moteur commun
+avec un callback qui reproduit exactement les evenements deja journalises ici
+(page_fetched, blocked, retry_scheduled, giving_up...), et de parser le JSON de
+la reponse. `collect.py` n'a besoin d'aucune modification : meme signature,
+meme contrat de retour (`dict | None`).
 """
 
 from __future__ import annotations
 
 import json
 import logging
-import random
-import time
 from typing import Any
 
 import httpx
 
-RETRYABLE_STATUS = frozenset({408, 429, 500, 502, 503, 504})
-NON_RETRYABLE_STATUS = frozenset({400, 401, 403, 404, 410})
+from commun.http_client import NON_RETRYABLE_STATUS, RETRYABLE_STATUS, fetch_with_retry as _fetch_with_retry
+
 LOGGER = logging.getLogger("harvest")
 
 
@@ -53,13 +59,14 @@ def build_client(base_url: str, user_agent: str) -> httpx.Client:
     )
 
 
-def _parse_retry_after(value: str | None) -> float | None:
-    if not value:
-        return None
-    try:
-        return max(0.0, float(value))
-    except ValueError:
-        return None
+_EVENT_NAMES = {
+    "request_error": "request_error",
+    "fetched": "page_fetched",
+    "retryable_status": "page_fetched",
+    "blocked": "blocked",
+    "retry_scheduled": "retry_scheduled",
+    "giving_up": "giving_up",
+}
 
 
 def fetch_browse_page(
@@ -72,40 +79,24 @@ def fetch_browse_page(
 ) -> dict[str, Any] | None:
     """Recupere une page de resultats JSON, avec reprises bornees sur erreurs temporaires."""
     params = {"q": "", "offset": offset, "load_amount": load_amount}
-    for attempt in range(max_retries + 1):
-        time.sleep(delay_s)
-        started = time.perf_counter()
-        try:
-            response = client.get("/browse", params=params)
-        except httpx.TransportError as error:
-            log_event("request_error", offset=offset, attempt=attempt + 1, error=str(error))
-            response = None
-        else:
-            duration_ms = round((time.perf_counter() - started) * 1000)
-            log_event(
-                "page_fetched",
-                url=str(response.url),
-                status=response.status_code,
-                duration_ms=duration_ms,
-                attempt=attempt + 1,
-            )
-            if response.status_code in NON_RETRYABLE_STATUS:
-                log_event("blocked", offset=offset, status=response.status_code)
-                return None
-            if response.status_code not in RETRYABLE_STATUS:
-                try:
-                    return response.json()
-                except json.JSONDecodeError as error:
-                    log_event("bad_json", offset=offset, error=str(error))
-                    return None
 
-        if attempt == max_retries:
-            log_event("giving_up", offset=offset, attempts=attempt + 1)
-            return None
+    def on_event(event: str, payload: dict) -> None:
+        name = _EVENT_NAMES.get(event)
+        if name is not None:
+            log_event(name, offset=offset, **payload)
 
-        retry_after = _parse_retry_after(response.headers.get("Retry-After") if response else None)
-        backoff_s = retry_after if retry_after is not None else float(2**attempt)
-        backoff_s += random.uniform(0.0, 0.3 * backoff_s)
-        log_event("retry_scheduled", offset=offset, attempt=attempt + 1, delay_s=round(backoff_s, 3))
-        time.sleep(backoff_s)
-    return None
+    response = _fetch_with_retry(
+        client,
+        "/browse",
+        params=params,
+        max_retries=max_retries,
+        delay_before_s=delay_s,
+        on_event=on_event,
+    )
+    if response is None:
+        return None
+    try:
+        return response.json()
+    except json.JSONDecodeError as error:
+        log_event("bad_json", offset=offset, error=str(error))
+        return None

@@ -10,6 +10,8 @@ import argparse
 import json
 from pathlib import Path
 
+from commun.config import load_env_file
+
 from .acquisition import build_client, fetch_browse_page, log_event
 from .config import Settings
 from .extraction import build_artwork
@@ -73,6 +75,7 @@ def run(settings: Settings) -> CollectionReport:
 
 def main(argv: list[str] | None = None) -> CollectionReport:
     args = parse_args(argv)
+    load_env_file()
     settings = Settings.from_env()
     if args.max_items is not None:
         settings.max_items = args.max_items
