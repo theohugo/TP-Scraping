@@ -1,6 +1,6 @@
 # TP Scraping — travail de groupe
 
-Formation *Web Scraping moderne et industrialisation* (IPSSI, formateur Adrien Vossough).
+Formation *Web Scraping moderne et industrialisation*.
 Travail de groupe : **TALEB Amine** et **RAGUIN Hugo**, chacun sur sa propre cible.
 
 ## Contenu du depot
@@ -9,7 +9,7 @@ Travail de groupe : **TALEB Amine** et **RAGUIN Hugo**, chacun sur sa propre cib
 |---|---|---|---|
 | [`s18-greenkart-scraper/`](s18-greenkart-scraper) | S18 — GreenKart (Rahul Shetty Academy) | TALEB Amine | [README](s18-greenkart-scraper/README.md) |
 | [`s30-harvard-art-museums-scraper/`](s30-harvard-art-museums-scraper) | S30 — Harvard Art Museums Collections | RAGUIN Hugo | [README](s30-harvard-art-museums-scraper/README.md) |
-| [`commun/`](commun) | Package partage par les deux collecteurs (retry HTTP, deduplication/export JSONL, chargement `.env`) | — | [README](commun/README.md) |
+| [`commun/`](commun) | Package partage par les deux collecteurs (retry HTTP, deduplication/export JSONL, chargement `.env`) | TALEB Amine, RAGUIN Hugo | [README](commun/README.md) |
 | `eleves/`, `MATRICE_CIBLES_ELEVES.html` | Supports fournis par le formateur | — | — |
 
 ## Structure
