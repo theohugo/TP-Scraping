@@ -1,113 +1,113 @@
 # Harvard Art Museums scraper — cible S30
 
-Travail de groupe (binome) de la formation "Web Scraping moderne et industrialisation"
-(IPSSI, formateur Adrien Vossough) : **RAGUIN Hugo** (cible S30, ce dossier) et
+Travail de groupe (binôme) de la formation "Web Scraping moderne et industrialisation"
+(IPSSI, formateur Romain VASSEUR) : **RAGUIN Hugo** (cible S30, ce dossier) et
 **TALEB Amine** (cible S18,
-[`../s18-greenkart-scraper`](../s18-greenkart-scraper)). Le detail du binome et des
-fonctions partagees entre les deux collecteurs est dans [`../README.md`](../README.md) et
+[`../s18-greenkart-scraper`](../s18-greenkart-scraper)). Le détail du binôme et des
+fonctions partagées entre les deux collecteurs est dans [`../README.md`](../README.md) et
 [`../commun/README.md`](../commun/README.md).
 
-Cible attribuee a Hugo : **S30, Harvard Art Museums Collections**.
+Cible attribuée à Hugo : **S30, Harvard Art Museums Collections**.
 
-Les supports fournis par le formateur (`eleves/`, `MATRICE_CIBLES_ELEVES.html`) sont a la
-racine du depot (`../eleves`, `../MATRICE_CIBLES_ELEVES.html`) ; le projet de collecte
-lui-meme (`src/`, `verif/`, `docs/`) est decrit ci-dessous.
+Les supports fournis par le formateur (`eleves/`, `MATRICE_CIBLES_ELEVES.html`) sont à la
+racine du dépôt (`../eleves`, `../MATRICE_CIBLES_ELEVES.html`) ; le projet de collecte
+lui-même (`src/`, `verif/`, `docs/`) est décrit ci-dessous.
 
-## Demarrage rapide
+## Démarrage rapide
 
-Toutes les commandes ci-dessous sont a executer depuis **ce dossier**
+Toutes les commandes ci-dessous sont à exécuter depuis **ce dossier**
 (`s30-harvard-art-museums-scraper/`).
 
 ```bash
 # 1. Environnement
 python -m venv .venv
 .venv/Scripts/activate          # Windows ; sous Linux/Mac : source .venv/bin/activate
-pip install -e ../commun        # package partage avec le collecteur S18 du binome
+pip install -e ../commun        # package partagé avec le collecteur S18 du binôme
 pip install -r requirements.txt
 
-# 2. Collecte limitee (reseau requis)
+# 2. Collecte limitée (réseau requis)
 PYTHONPATH=src python -m harvest.collect --max-items 20 --delay-s 1.5
 
-# 3. Verification (aucun reseau requis)
+# 3. Vérification (aucun réseau requis)
 python verif/verif.py
 ```
 
-La collecte ecrit `data/artworks.jsonl` (non versionne) et met a jour
-`samples/sample_output.json` (10 objets, versionne). La verification rejoue l'extraction sur
-une page enregistree (`verif/fixtures/browse_page_sample.json`) et affiche `OK`/`ECHEC` sur
-trois controles.
+La collecte écrit `data/artworks.jsonl` (non versionné) et met à jour
+`samples/sample_output.json` (10 objets, versionné). La vérification rejoue l'extraction sur
+une page enregistrée (`verif/fixtures/browse_page_sample.json`) et affiche `OK`/`ECHEC` sur
+trois contrôles.
 
-`config.example` documente les parametres modifiables (volume, delai, tentatives...) ; aucun
+`config.example` documente les paramètres modifiables (volume, délai, tentatives...) ; aucun
 n'est un secret, la cible ne demande aucune authentification. Copiez-le en `.env` si besoin.
 
-## Comment ca marche
+## Comment ça marche
 
 La cible (`https://harvardartmuseums.org/collections`) est une SPA : le HTML initial ne
-contient aucune oeuvre, seulement la coquille de la page. Le diagnostic complet (preuves a
-l'appui : requetes `curl`, comparaison HTML/DOM, interception reseau Playwright) est dans
-[`docs/cible.md`](docs/cible.md) ; en resume, la page appelle elle-meme au chargement un
+contient aucune œuvre, seulement la coquille de la page. Le diagnostic complet (preuves à
+l'appui : requêtes `curl`, comparaison HTML/DOM, interception réseau Playwright) est dans
+[`docs/cible.md`](docs/cible.md) ; en résumé, la page appelle elle-même au chargement un
 endpoint JSON interne, `GET /browse?q=&offset=...&load_amount=...`, qui renvoie directement
-tous les champs necessaires (titre, artiste(s), date, classification, medium, URL de fiche).
+tous les champs nécessaires (titre, artiste(s), date, classification, medium, URL de fiche).
 Le projet rejoue cet appel directement en HTTP, sans jamais ouvrir de navigateur pendant une
-collecte reelle — Playwright n'a servi qu'une fois, pour le diagnostic.
+collecte réelle — Playwright n'a servi qu'une fois, pour le diagnostic.
 
 Le flux de traitement, fichier par fichier :
 
 ```
-config.py          Lit les parametres (HARVEST_*) depuis l'environnement.
+config.py          Lit les paramètres (HARVEST_*) depuis l'environnement.
       |
-acquisition.py      Appelle /browse avec offset/load_amount ; retries bornes sur 429/5xx,
+acquisition.py      Appelle /browse avec offset/load_amount ; retries bornés sur 429/5xx,
       |              respecte Retry-After, backoff exponentiel + gigue ; ne rejoue jamais
-      |              un 401/403/404/410. Journalise chaque requete (log_event).
+      |              un 401/403/404/410. Journalise chaque requête (log_event).
       v
 extraction.py       Transforme un enregistrement JSON brut en objet Artwork : normalise les
-      |              artistes (people -> liste de noms), les dates (bornes numeriques ou
+      |              artistes (people -> liste de noms), les dates (bornes numériques ou
       |              repli regex sur texte libre), l'URL (forme canonique). Un champ
       |              obligatoire absent (title, classification, url, object_id) fait rejeter
-      |              l'objet -- proprement, journalise, sans planter la collecte.
+      |              l'objet -- proprement, journalisé, sans planter la collecte.
       v
 models.py           Le contrat Pydantic Artwork : valide les types, rejette un titre ou une
       |              classification vides.
       v
-storage.py          Deduplique par object_id (identifiant stable du musee), puis exporte en
-                     JSONL (data/artworks.jsonl) et un echantillon JSON (samples/).
+storage.py          Déduplique par object_id (identifiant stable du musée), puis exporte en
+                     JSONL (data/artworks.jsonl) et un échantillon JSON (samples/).
 ```
 
-`collect.py` orchestre les quatre etapes dans une boucle bornee (`while vus < max_items`) et
-affiche un rapport final (vus / exportes / rejetes / doublons / champs manquants).
+`collect.py` orchestre les quatre étapes dans une boucle bornée (`while vus < max_items`) et
+affiche un rapport final (vus / exportés / rejetés / doublons / champs manquants).
 
-Depuis la fusion avec le collecteur S18 du binome, `acquisition.py` et `storage.py`
-delegent la boucle de retry HTTP et la deduplication/export JSONL generiques au package
-partage [`../commun`](../commun) (strictement identiques entre les deux projets) ; le reste
-de ce flux (modele `Artwork`, normalisations, pagination `/browse`) reste propre a ce
-projet. Voir [`../commun/README.md`](../commun/README.md) pour le detail.
+Depuis la fusion avec le collecteur S18 du binôme, `acquisition.py` et `storage.py`
+délèguent la boucle de retry HTTP et la déduplication/export JSONL génériques au package
+partagé [`../commun`](../commun) (strictement identiques entre les deux projets) ; le reste
+de ce flux (modèle `Artwork`, normalisations, pagination `/browse`) reste propre à ce
+projet. Voir [`../commun/README.md`](../commun/README.md) pour le détail.
 
 ## Choix techniques, et pourquoi
 
-| Besoin | Choix retenu | Pourquoi | Alternative ecartee |
+| Besoin | Choix retenu | Pourquoi | Alternative écartée |
 |---|---|---|---|
-| Client HTTP | `httpx.Client` | Simple, deja pratique en TP module 02 ; timeouts et pool de connexions explicites ; une seule cible ne justifie pas plus. | **Scrapy** : inutile pour une cible unique sans arborescence de liens a crawler, et surtout *nommement bloque* par le `robots.txt` de la cible (voir `docs/cible.md` §1) — l'utiliser avec son User-Agent par defaut aurait ete exactement ce que l'enonce interdit. |
-| Extraction | Fonctions Python pures (`extraction.py`) | La source est deja du JSON structure et type : aucun DOM a parser. | **BeautifulSoup / Parsel** : conçus pour extraire d'un arbre HTML ; sans objet, puisqu'il n'y a pas de HTML a lire ici. |
-| Modele de donnees | **Pydantic** (`BaseModel`) | Validation stricte native (types, champ vide rejete) avec des messages d'erreur exploitables directement dans les logs. | **dataclass + validation manuelle** : aurait demande de reecrire a la main tout ce que Pydantic fournit deja. |
-| Verification | Script autonome `verif.py` (assertions + `print OK/ECHEC`) | Aucune dependance supplementaire ; lisible et rejouable en une seule commande, sans reseau. | **pytest** : les deux comptent a egalite selon l'enonce ; un script simple evite d'ajouter une dependance de test pour seulement 3 controles. |
-| Format de sortie | **JSONL** (un objet par ligne) | Ecriture au fil de l'eau, format recommande en cours pour une zone STAGING, lisible ligne par ligne. | **CSV** : ne peut pas representer proprement une liste (`artists`) ni distinguer `None` d'une chaine vide. |
-| Navigateur | Playwright utilise **une seule fois**, en diagnostic, jamais en collecte reelle | Le cout d'un navigateur est un ordre de grandeur superieur (memoire, temps) a un simple appel HTTP, pour un resultat identique une fois l'endpoint reel identifie. | Piloter Playwright en continu pour chaque page : aurait fonctionne, mais inutilement lent et fragile. |
-| Identifiant de deduplication | `object_id` (entier interne du musee) | Garanti unique et present, deja utilise dans l'URL de la fiche. | `object_number` (numero d'inventaire, ex. `1931.162.A`) : peut etre partage par plusieurs objets d'un meme lot (suffixes `.A`/`.B`), donc moins fiable comme cle. |
+| Client HTTP | `httpx.Client` | Simple, déjà pratiqué en TP module 02 ; timeouts et pool de connexions explicites ; une seule cible ne justifie pas plus. | **Scrapy** : inutile pour une cible unique sans arborescence de liens à crawler, et surtout *nommément bloqué* par le `robots.txt` de la cible (voir `docs/cible.md` §1) — l'utiliser avec son User-Agent par défaut aurait été exactement ce que l'énoncé interdit. |
+| Extraction | Fonctions Python pures (`extraction.py`) | La source est déjà du JSON structuré et typé : aucun DOM à parser. | **BeautifulSoup / Parsel** : conçus pour extraire d'un arbre HTML ; sans objet, puisqu'il n'y a pas de HTML à lire ici. |
+| Modèle de données | **Pydantic** (`BaseModel`) | Validation stricte native (types, champ vide rejeté) avec des messages d'erreur exploitables directement dans les logs. | **dataclass + validation manuelle** : aurait demandé de réécrire à la main tout ce que Pydantic fournit déjà. |
+| Vérification | Script autonome `verif.py` (assertions + `print OK/ECHEC`) | Aucune dépendance supplémentaire ; lisible et rejouable en une seule commande, sans réseau. | **pytest** : les deux comptent à égalité selon l'énoncé ; un script simple évite d'ajouter une dépendance de test pour seulement 3 contrôles. |
+| Format de sortie | **JSONL** (un objet par ligne) | Écriture au fil de l'eau, format recommandé en cours pour une zone STAGING, lisible ligne par ligne. | **CSV** : ne peut pas représenter proprement une liste (`artists`) ni distinguer `None` d'une chaîne vide. |
+| Navigateur | Playwright utilisé **une seule fois**, en diagnostic, jamais en collecte réelle | Le coût d'un navigateur est un ordre de grandeur supérieur (mémoire, temps) à un simple appel HTTP, pour un résultat identique une fois l'endpoint réel identifié. | Piloter Playwright en continu pour chaque page : aurait fonctionné, mais inutilement lent et fragile. |
+| Identifiant de déduplication | `object_id` (entier interne du musée) | Garanti unique et présent, déjà utilisé dans l'URL de la fiche. | `object_number` (numéro d'inventaire, ex. `1931.162.A`) : peut être partagé par plusieurs objets d'un même lot (suffixes `.A`/`.B`), donc moins fiable comme clé. |
 
-Le detail des deux decisions de conception les plus structurantes (avec leurs compromis
-assumes) et l'ancrage justifie des deux champs les plus importants sont dans
+Le détail des deux décisions de conception les plus structurantes (avec leurs compromis
+assumés) et l'ancrage justifié des deux champs les plus importants sont dans
 [`docs/architecture.md`](docs/architecture.md).
 
-## Structure du depot
+## Structure du dépôt
 
 ```
 src/harvest/        Code du collecteur (config, acquisition, extraction, models, storage, collect)
-verif/               Script de verification + page de resultats enregistree (sans reseau)
-samples/             Echantillon de sortie (10 objets), verse dans le depot
-docs/                Fiche de cible avec preuves, architecture detaillee, usage de l'IA
-data/                Sortie complete d'une collecte reelle (non versionne, genere localement)
-../commun/           Package partage avec le collecteur S18 (retry HTTP, storage, .env)
-../eleves/, ../MATRICE_CIBLES_ELEVES.html    Supports fournis par le formateur (racine du depot)
+verif/               Script de vérification + page de résultats enregistrée (sans réseau)
+samples/             Échantillon de sortie (10 objets), versé dans le dépôt
+docs/                Fiche de cible avec preuves, architecture détaillée, usage de l'IA
+data/                Sortie complète d'une collecte réelle (non versionné, généré localement)
+../commun/           Package partagé avec le collecteur S18 (retry HTTP, storage, .env)
+../eleves/, ../MATRICE_CIBLES_ELEVES.html    Supports fournis par le formateur (racine du dépôt)
 ```
 
 ## Format de sortie
@@ -120,23 +120,23 @@ data/                Sortie complete d'une collecte reelle (non versionne, gener
 
 ## Limites connues
 
-1. Le catalogue source (~250 000 objets) evolue en continu : un `object_id` collecte reste
-   valide, mais l'objet correspondant peut etre republie ou retire entre deux collectes.
-2. Le champ `people` (artistes) ne distingue pas encore tous les roles curatoriaux possibles
-   (voir `_CREATION_ROLES` dans `extraction.py`) ; un role absent de la liste serait
-   silencieusement exclu plutot que signale.
-3. Le repli de date par expression reguliere (`parse_date_bounds`) ne reconnait qu'une
-   premiere annee a 1-4 chiffres avec marqueur BCE/BC ; un format de date exotique renverrait
-   `None, None` plutot qu'une valeur fausse, mais resterait non couvert.
+1. Le catalogue source (~250 000 objets) évolue en continu : un `object_id` collecté reste
+   valide, mais l'objet correspondant peut être republié ou retiré entre deux collectes.
+2. Le champ `people` (artistes) ne distingue pas encore tous les rôles curatoriaux possibles
+   (voir `_CREATION_ROLES` dans `extraction.py`) ; un rôle absent de la liste serait
+   silencieusement exclu plutôt que signalé.
+3. Le repli de date par expression régulière (`parse_date_bounds`) ne reconnaît qu'une
+   première année à 1-4 chiffres avec marqueur BCE/BC ; un format de date exotique renverrait
+   `None, None` plutôt qu'une valeur fausse, mais resterait non couvert.
 
-## Usage responsable applique
+## Usage responsable appliqué
 
-- `robots.txt` lu integralement avant la premiere requete (voir `docs/cible.md` §1) : le
-  fichier ne couvre, par son absence de groupe `*`, aucun client identifie distinctement --
-  mais l'User-Agent du projet reste explicite et honnete, et ne se fait jamais passer pour un
-  des robots listes.
-- Une seule requete a la fois, delai minimum de 1,5 s entre deux appels (`HARVEST_DELAY_S`).
-- Aucune authentification, aucune action irreversible, aucune donnee personnelle collectee.
-- La cle d'API interne du musee, visible dans les reponses de l'endpoint utilise, n'est
-  jamais lue ni transmise (voir note ethique dans `src/harvest/acquisition.py`).
+- `robots.txt` lu intégralement avant la première requête (voir `docs/cible.md` §1) : le
+  fichier ne couvre, par son absence de groupe `*`, aucun client identifié distinctement --
+  mais l'User-Agent du projet reste explicite et honnête, et ne se fait jamais passer pour un
+  des robots listés.
+- Une seule requête à la fois, délai minimum de 1,5 s entre deux appels (`HARVEST_DELAY_S`).
+- Aucune authentification, aucune action irréversible, aucune donnée personnelle collectée.
+- La clé d'API interne du musée, visible dans les réponses de l'endpoint utilisé, n'est
+  jamais lue ni transmise (voir note éthique dans `src/harvest/acquisition.py`).
 - Voir [`docs/AI_USAGE.md`](docs/AI_USAGE.md) pour l'usage de l'IA sur ce projet.
